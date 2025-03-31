@@ -1,1 +1,1 @@
-Thi is a repo for cpp study
+This is a repo for cpp study
