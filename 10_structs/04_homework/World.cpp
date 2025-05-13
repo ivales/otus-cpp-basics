@@ -11,6 +11,20 @@ static constexpr double timePerTick = 0.001;
  * Конструирует объект мира для симуляции
  * @param worldFilePath путь к файлу модели мира
  */
+
+Point readPoint (std::ifstream& stream) {
+    Point point;
+    stream >> point.x >> point.y;
+    return point;
+    }
+
+Color readColor (std::ifstream& stream) {
+    double red, green, blue;
+    stream >> red >> green >> blue;
+    return Color(red, green, blue);
+    }
+
+
 World::World(const std::string& worldFilePath) {
 
     std::ifstream stream(worldFilePath);
@@ -23,24 +37,29 @@ World::World(const std::string& worldFilePath) {
      * многократно - хорошо бы вынести это в функцию
      * и не дублировать код...
      */
-    stream >> topLeft.x >> topLeft.y >> bottomRight.x >> bottomRight.y;
-    physics.setWorldBox(topLeft, bottomRight);
+    
 
+    // stream >> topLeft.x >> topLeft.y >> bottomRight.x >> bottomRight.y;
+    topLeft = readPoint(stream);
+    bottomRight = readPoint(stream);
+    physics.setWorldBox(topLeft, bottomRight);
+    /**Почему не работает реализация через неименованные объекты? */
+    // physics.setWorldBox(readPoint(stream), readPoint(stream));
     /**
      * TODO: хорошее место для улучшения.
      * (x, y) и (vx, vy) - составные части объекта, также
      * как и (red, green, blue). Опять же, можно упростить
      * этот код, научившись читать сразу Point, Color...
      */
-    double x;
-    double y;
-    double vx;
-    double vy;
+    // double x;
+    // double y;
+    // double vx;
+    // double vy;
     double radius;
 
-    double red;
-    double green;
-    double blue;
+    // double red;
+    // double green;
+    // double blue;
 
     bool isCollidable;
 
@@ -49,9 +68,12 @@ World::World(const std::string& worldFilePath) {
     while (stream.peek(), stream.good()) {
         // Читаем координаты центра шара (x, y) и вектор
         // его скорости (vx, vy)
-        stream >> x >> y >> vx >> vy;
+        // stream >> x >> y >> vx >> vy;
+        Point center = readPoint(stream);
+        Velocity velocity = Velocity(readPoint(stream));
         // Читаем три составляющие цвета шара
-        stream >> red >> green >> blue;
+        // stream >> red >> green >> blue;
+        Color color = readColor(stream);
         // Читаем радиус шара
         stream >> radius;
         // Читаем свойство шара isCollidable, которое
@@ -60,7 +82,8 @@ World::World(const std::string& worldFilePath) {
         // В базовой части задания этот параметр
         stream >> std::boolalpha >> isCollidable;
 
-        balls.push_back(Ball(Velocity(Point(vx, vy)), Point(x, y), radius, Color (red, green, blue)));
+        // balls.push_back(Ball(Velocity(Point(vx, vy)), Point(x, y), Color (red, green, blue), radius));
+        balls.push_back(Ball(velocity, center, color, radius));
         
         
         // TODO: место для доработки.
