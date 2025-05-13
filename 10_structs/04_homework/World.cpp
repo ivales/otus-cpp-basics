@@ -60,7 +60,7 @@ World::World(const std::string& worldFilePath) {
         // В базовой части задания этот параметр
         stream >> std::boolalpha >> isCollidable;
 
-        balls.push_back(Ball(Velocity(Point(vx, vy)), Point(x, y), Color (red, green, blue)));
+        balls.push_back(Ball(Velocity(Point(vx, vy)), Point(x, y), radius, Color (red, green, blue)));
         
         
         // TODO: место для доработки.

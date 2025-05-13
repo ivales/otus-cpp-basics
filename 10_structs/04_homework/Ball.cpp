@@ -1,9 +1,10 @@
 #include "Ball.hpp"
 #include <cmath>
 
-Ball::Ball(const Velocity& velocity, const Point& center, const Color& color) {
+Ball::Ball(const Velocity& velocity, const Point& center, const Color& color, const double radius) {
     this->velocity = velocity;
     this->center = center;
+    this->radius = radius;
     this->color = color;
 }
 
@@ -44,11 +45,6 @@ void Ball::draw(Painter& painter) const {
 void Ball::setCenter(const Point& center) {
     // TODO: место для доработки
     this->center = center;
-}
-
-void Ball::setColor(const Color& color) {
-    this->color = color;
-
 }
 
 /**
