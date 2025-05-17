@@ -12,17 +12,22 @@ static constexpr double timePerTick = 0.001;
  * @param worldFilePath путь к файлу модели мира
  */
 
-Point readPoint (std::ifstream& stream) {
-    Point point;
-    stream >> point.x >> point.y;
-    return point;
-    }
+// Point readPoint (std::ifstream& stream) {
+//     Point point;
+//     stream >> point.x >> point.y;
+//     return point;
+//     }
 
 Color readColor (std::ifstream& stream) {
     double red, green, blue;
     stream >> red >> green >> blue;
     return Color(red, green, blue);
     }
+
+std::istream& operator>>(std::istream& stream, Point& point) {
+    stream >> point.x >> point.y;
+    return stream;
+}
 
 
 World::World(const std::string& worldFilePath) {
@@ -40,8 +45,9 @@ World::World(const std::string& worldFilePath) {
     
 
     // stream >> topLeft.x >> topLeft.y >> bottomRight.x >> bottomRight.y;
-    topLeft = readPoint(stream);
-    bottomRight = readPoint(stream);
+    // topLeft = readPoint(stream);
+    stream >> topLeft >> bottomRight;
+    // bottomRight = readPoint(stream);
     physics.setWorldBox(topLeft, bottomRight);
     /**Почему не работает реализация через неименованные объекты? */
     // physics.setWorldBox(readPoint(stream), readPoint(stream));
@@ -69,8 +75,10 @@ World::World(const std::string& worldFilePath) {
         // Читаем координаты центра шара (x, y) и вектор
         // его скорости (vx, vy)
         // stream >> x >> y >> vx >> vy;
-        Point center = readPoint(stream);
-        Velocity velocity = Velocity(readPoint(stream));
+        // Point center = readPoint(stream);
+        // Velocity velocity = Velocity(readPoint(stream));
+        Point center, speedvector;
+        stream >> center >> speedvector;
         // Читаем три составляющие цвета шара
         // stream >> red >> green >> blue;
         Color color = readColor(stream);
@@ -81,9 +89,9 @@ World::World(const std::string& worldFilePath) {
         // шаров как столкновение. Если true - требуется.
         // В базовой части задания этот параметр
         stream >> std::boolalpha >> isCollidable;
-
+   
         // balls.push_back(Ball(Velocity(Point(vx, vy)), Point(x, y), Color (red, green, blue), radius));
-        balls.push_back(Ball(velocity, center, color, radius));
+        balls.push_back(Ball(Velocity(speedvector), center, color, radius, isCollidable));
         
         
         // TODO: место для доработки.

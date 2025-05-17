@@ -5,19 +5,21 @@
 
 class Ball {
 public:
-    Ball(const Velocity& velocity, const Point& center, const Color& color, const double radius);
+    Ball(const Velocity& velocity, const Point& center, const Color& color, const double radius, const bool callidable);
     ~Ball() = default;
-    void setVelocity(const Velocity& velocity);
-    Velocity getVelocity() const;
-    void draw(Painter& painter) const;
-    void setCenter(const Point& center);
+    void draw(Painter& painter) const;    
     Point getCenter() const;
-    double getRadius() const;
     double getMass() const;
+    double getRadius() const;
+    Velocity getVelocity() const;
+    bool isCallidable() const;
+    void setCenter(const Point& center);
+    void setVelocity(const Velocity& velocity);
+
 private:
-    const double PI = 3.14159265358979323846;
-    double radius;
-    Color color;
+    bool callidable;
     Point center;
-    Velocity velocity;
+    Color color;
+    double mass, radius;
+    Velocity velocity;    
 };

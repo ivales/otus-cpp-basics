@@ -1,11 +1,13 @@
 #include "Ball.hpp"
 #include <cmath>
 
-Ball::Ball(const Velocity& velocity, const Point& center, const Color& color, const double radius) {
+Ball::Ball(const Velocity& velocity, const Point& center, const Color& color, const double radius, const bool callidable) {
     this->velocity = velocity;
     this->center = center;
     this->radius = radius;
     this->color = color;
+    this->callidable = callidable;
+    this->mass = M_PI * pow(radius, 3) * 4. / 3.;
 }
 
 /**
@@ -74,5 +76,9 @@ double Ball::getRadius() const {
  */
 double Ball::getMass() const {
     // TODO: место для доработки
-    return PI * pow(radius, 3) * 4. / 3.;
+    return mass;
+}
+
+bool Ball::isCallidable() const {
+    return callidable;
 }
