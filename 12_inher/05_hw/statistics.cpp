@@ -108,7 +108,8 @@ public:
 
 private:
 	std::vector<double> numbers;
-	double m_mean, m_std;
+	double m_mean = 0; 
+	double m_std;
 	int count = 0;
 };
 
