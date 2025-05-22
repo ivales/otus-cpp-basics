@@ -67,11 +67,11 @@ public:
 	void update(double next) override {
 		
 		m_mean += next;
-		count++;
+		m_count++;
 	}
 
 	double eval() const override {
-		return m_mean/count;
+		return m_mean/m_count;
 	}
 
 	const char * name() const override {
@@ -80,7 +80,7 @@ public:
 
 private:
 	double m_mean;
-	int count = 0;
+	int m_count = 0;
 };
 
 class Std : public IStatistics {
@@ -114,16 +114,16 @@ private:
 
 class P90 : public IStatistics {
 public:
-	P90() : m_proc{90} {}
+	P90() : m_prc{90} {}
 
 	void update(double next) override {
 		
-		numbers.push_back(next);
-		std::sort(begin(numbers), end(numbers));
+		m_numbers.push_back(next);
+		std::sort(begin(m_numbers), end(m_numbers));
 	}
 
 	double eval() const override {
-		return numbers[static_cast<int>(m_proc*numbers.size()/100)];
+		return m_numbers[static_cast<int>(m_prc*m_numbers.size()/100)];
 	}
 
 	const char * name() const override {
@@ -131,13 +131,13 @@ public:
 	}
 
 private:
-	std::vector<double> numbers;
-	double m_proc;
+	std::vector<double> m_numbers;
+	double m_prc;
 };
 
 class P95 : public P90 {
 public:
-	P95() : m_proc{95} {
+	P95() : m_prc{95} {
 
 	}
 
@@ -146,8 +146,8 @@ public:
 	}
 
 private:
-	std::vector<double> numbers;
-	double m_proc;
+	std::vector<double> m_numbers;
+	double m_prc;
 
 };
 
