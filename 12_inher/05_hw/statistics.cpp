@@ -98,7 +98,7 @@ public:
 
 	double eval() const override {
 		double disp = 0;
-		if (m_count == 0) throw std::domain_error("Division by zero!");
+		if (m_count == 0 || m_count == 1) throw std::domain_error("Division by zero!");
 		double mean = m_mean/m_count;
 		for (double number:m_numbers) {disp += pow(number - mean, 2);}
 		return sqrt(disp/m_count-1);
