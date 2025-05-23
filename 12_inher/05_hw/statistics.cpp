@@ -123,7 +123,7 @@ class Procentile : public IStatistics {
 		std::sort(begin(m_numbers), end(m_numbers));
 	}
 
-	double eval() const override {
+	virtual double eval() const override {
 		return m_numbers[static_cast<int>(m_percentile*m_numbers.size()/100)];
 	}
 	private:
