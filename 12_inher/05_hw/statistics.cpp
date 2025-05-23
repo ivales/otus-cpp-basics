@@ -86,7 +86,7 @@ private:
 
 class Std : public IStatistics {
 public:
-	Std() : m_count{0}, m_mean{0}, m_std{0}, m_numbers{0} {
+	Std() : m_count{0}, m_mean{0}, m_std{0}, m_numbers{} {
 	}
 
 	void update(double next) override {
@@ -116,7 +116,7 @@ private:
 
 class Procentile : public IStatistics {
 	public:
-		Procentile(double d) : m_numbers{0}, m_percentile{d} {};
+		Procentile(double d) : m_numbers{}, m_percentile{d} {};
 		
 	void update(double next) override {
 		m_numbers.push_back(next);
