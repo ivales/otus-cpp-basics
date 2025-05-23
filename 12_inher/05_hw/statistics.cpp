@@ -114,42 +114,40 @@ private:
 	std::vector<double> m_numbers;
 };
 
-class P90 : public IStatistics {
-public:
-	P90() : m_numbers{0}, m_prc{90} {}
-
-	void update(double next) override {
+class Procentile : public IStatistics {
+	public:
+		Procentile(double d) : m_numbers{0}, m_percentile{d} {};
 		
+	void update(double next) override {
 		m_numbers.push_back(next);
 		std::sort(begin(m_numbers), end(m_numbers));
 	}
 
 	double eval() const override {
-		return m_numbers[static_cast<int>(m_prc*m_numbers.size()/100)];
+		return m_numbers[static_cast<int>(m_percentile*m_numbers.size()/100)];
 	}
+	private:
+		std::vector<double> m_numbers;
+		double m_percentile;
+};
+
+class P90 : public Procentile {
+public:
+	P90() : Procentile(90) {}
 
 	const char * name() const override {
 		return "p90";
 	}
 
-private:
-	std::vector<double> m_numbers;
-	double m_prc;
 };
 
-class P95 : public P90 {
-public:
-	P95() : m_numbers{0}, m_prc{95} {
-
-	}
+class P95 : public Procentile {
+	public:
+		P95() : Procentile(95) {}
 
 	const char * name() const override {
 		return "p95";
 	}
-
-private:
-	std::vector<double> m_numbers;
-	double m_prc;
 
 };
 
