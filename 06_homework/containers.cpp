@@ -1,7 +1,9 @@
 #include "array.h"
+#include "list.h"
 
 
 int main() {
+    std::cout << "Проверка последовательного списка" << std::endl;
     Array<int> example{};
     for (int i = 0; i < 10; ++i) {
         example.push_back(i);
@@ -19,5 +21,11 @@ int main() {
     example.print();
     example.push_back(30);
     example.print();
+    std::cout << "Проверка односвязного списка" << std::endl;
+    List<int> list{};
+    for (int i = 0; i < 10; ++i) {
+        list.push_back(i);
+    }
+    list.print();
     return 0;
 }

@@ -41,7 +41,7 @@ class Array
                 delete[] m_data;
         }
 
-        int max(int a, int b) {
+        int max (int a, int b) {
             return a < b ? a : b;
         }
 
@@ -86,7 +86,7 @@ class Array
             return m_data[i];
         }
 
-        void print() {
+        void print() const {
             for (int i = 0; i < m_size; ++i) {
                 std::cout << m_data[i] << " ";
             }
