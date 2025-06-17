@@ -22,18 +22,15 @@ int main() {
     example.push_back(30);
     example.print();
     std::cout << "Проверка односвязного списка" << std::endl;
-    List<int> list;
-    std::cout << list.isEmpty() << std::endl;
-    std::cout << list.size() << std::endl;
-    list.push_back(3);
-    std::cout << list.isEmpty() << std::endl;
-    std::cout << list.size() << std::endl;
-    // list.push_back(4);
-    // std::cout << list.isEmpty() << std::endl;
-    // std::cout << list.size() << std::endl;
-    // for (int i = 0; i < 10; ++i) {
-    //     list->push_back(i);
-    // }
-    list.print();
+    List<int>* list = new List<int>;
+    for (int i = 0; i < 10; ++i) {
+        list->push_back(i);
+    }
+    list->print();
+    std::cout << list->size() << std::endl;
+    list->erase(2);
+    list->erase(3);
+    list->erase(4);
+    list->print();
     return 0;
 }

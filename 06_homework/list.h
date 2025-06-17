@@ -29,7 +29,7 @@ class List {
             m_size = a.size();
         }
         ~List() {
-            while (m_head) {
+            while (m_head != nullptr) {
                 erase();
             }
         }
@@ -42,7 +42,7 @@ class List {
                 Node* lastNode = end();
                 lastNode->m_next = node;
             }
-            ++m_size;
+            m_size++;
         }
 
         void insert(int pos, T val) {
@@ -57,13 +57,19 @@ class List {
         }
 
         void erase(int pos = 0) {
-            Node* intermediateNode = m_head;
-            for (int i=0; i < pos; ++i) {
-                intermediateNode = intermediateNode->m_next;
+            if (!isEmpty()) {
+                Node* intermediateNode = m_head;
+                Node* deleteNode;
+                for (int i=0; i < pos; i++) {
+                    intermediateNode = intermediateNode->m_next;
+                }
+                if (intermediateNode->m_next) {
+                    deleteNode = intermediateNode;
+                    intermediateNode = intermediateNode->m_next->m_next;
+                }
+                delete deleteNode;
+                m_size--;
             }
-            intermediateNode->m_next = intermediateNode->m_next->m_next;
-            delete intermediateNode;
-            m_size--;
         }
 
         int size() const {
@@ -96,8 +102,9 @@ class List {
 
         void print() const {
             Node* intermediateNode = m_head;
-            while (intermediateNode->m_next != nullptr) {
+            while (intermediateNode != nullptr) {
                 std::cout << intermediateNode->m_data << " ";
+                intermediateNode = intermediateNode->m_next;
             }
             std::cout << std::endl;
         }
