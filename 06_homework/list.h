@@ -6,11 +6,11 @@ class List {
     private:
         struct Node {
             Node() {
-                m_next = NULL;
+                m_next = nullptr;
             };
             Node(const T& data) {
                 m_data = data;
-                m_next = NULL;
+                m_next = nullptr;
             }
             T m_data;
             Node* m_next;
@@ -20,11 +20,11 @@ class List {
         
     public:
         List() {
-            m_head = NULL;
+            m_head = nullptr;
             m_size = 0;
 
         }
-        List(const List<T> & a) {
+        List(const List<T>& a) {
             m_head = a.begin();
             m_size = a.size();
         }
@@ -35,12 +35,14 @@ class List {
         }
         void push_back(T val) {
             Node* node = new Node(val);
-            Node* intermediateNode = m_head;
-            while (intermediateNode->m_next) {
-                intermediateNode = intermediateNode->m_next;
+            if (isEmpty()) {
+                m_head = node;
             }
-            intermediateNode->m_next = node;
-            m_size++;
+            else {
+                Node* lastNode = end();
+                lastNode->m_next = node;
+            }
+            ++m_size;
         }
 
         void insert(int pos, T val) {
@@ -49,7 +51,7 @@ class List {
             for (int i = 0; i < pos; ++i) {
                 intermediateNode = intermediateNode->m_next;
             }
-            node->m_next = intermediateNode->m_next.m_next;
+            node->m_next = intermediateNode->m_next->m_next;
             intermediateNode->m_next = node;
             m_size++;
         }
@@ -68,11 +70,23 @@ class List {
             return m_size;
         }
 
-        T& begin() const {
+        bool isEmpty() const {
+            return m_head == nullptr;
+        }
+
+        Node* begin() const {
             return m_head;
         }
 
-        T & operator[] (int pos) {
+        Node* end() const {
+            Node* intermediateNode = m_head;
+            while (intermediateNode->m_next != nullptr) {
+                intermediateNode = intermediateNode->m_next;
+            }
+            return intermediateNode;
+        }
+
+        Node* operator[] (int pos) {
             Node* intermediateNode = m_head;
             for (int i = 0; i < pos; ++i) {
                 intermediateNode = intermediateNode->m_next;
@@ -82,7 +96,7 @@ class List {
 
         void print() const {
             Node* intermediateNode = m_head;
-            while (intermediateNode->m_next) {
+            while (intermediateNode->m_next != nullptr) {
                 std::cout << intermediateNode->m_data << " ";
             }
             std::cout << std::endl;
