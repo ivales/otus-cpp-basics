@@ -19,6 +19,8 @@ class List {
         int m_size;
         
     public:
+        class Iter;
+
         List();
         List(const List<T>& a);
         ~List();
@@ -29,8 +31,8 @@ class List {
         size_t size() const;
         bool isEmpty() const;
         bool outOfRange(int pos);
-        Node* begin() const;
-        Node* end() const;
+        typename List<T>::Iter begin() const;
+        typename List<T>::Iter end() const;
         T& operator[] (size_t pos) const;
         void print() const;
 };
