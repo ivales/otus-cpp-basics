@@ -6,6 +6,25 @@
 
 
 template <typename T>
+class List<T>::Iter {
+    private:
+        Node* m_current;
+    public:
+        Iter (Node* node) : m_current(node) {};
+
+        const T& operator*() const {
+            return m_current->m_data;
+        }
+
+        Iter& operator++() {
+            if (m_current != nullptr) {
+                m_current = m_current->m_next;
+            }
+            return *this;
+        }    
+};
+
+template <typename T>
 List<T>::List() {
     m_head = nullptr;
     m_size = 0;
@@ -106,17 +125,17 @@ bool List<T>::outOfRange(int pos) {
 }
 
 template <typename T>
-Node* List<T>::begin() const {
-    return m_head;
+Iter List<T>::begin() const {
+    return Iter(m_head);
 }
 
 template <typename T>
-Node* List<T>::end() const {
-    Node* intermediateNode = m_head;
-    while (intermediateNode->m_next != nullptr) {
-        intermediateNode = intermediateNode->m_next;
+Iter List<T>::end() const {
+    Iter m_current = Iter(m_head);
+    while (m_current != nullptr && m_current->m_next != nullptr) {
+        m_current++;
     }
-    return intermediateNode;
+    return m_current;
 }
 
 template <typename T>
