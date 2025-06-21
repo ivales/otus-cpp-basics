@@ -21,6 +21,7 @@ int main() {
     example.print();
     example.push_back(30);
     example.print();
+    std::cout << example[2] << std::endl;;
     std::cout << "Проверка односвязного списка" << std::endl;
     List<int>* list = new List<int>;
     for (int i = 0; i < 10; ++i) {
@@ -29,8 +30,20 @@ int main() {
     list->print();
     std::cout << list->size() << std::endl;
     list->erase(2);
+        //тут так, потому что у меня удаление одного элемента, поэтому 5 и 7 превращаются в 4 и 5 после удалений
     list->erase(3);
     list->erase(4);
     list->print();
+    list->insert(0, 10);
+    list->print();
+    list->insert(4, 20);
+    list->print();
+    list->push_back(30);
+    list->print();
+    std::cout << list[2] << std::endl;
+    // example.insert(4, 20);
+    // example.print();
+    // example.push_back(30);
+    // example.print();
     return 0;
 }

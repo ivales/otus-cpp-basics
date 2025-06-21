@@ -45,39 +45,66 @@ class List {
             m_size++;
         }
 
-        void insert(int pos, T val) {
+        void insert(size_t pos, T val) {
             Node* node = new Node(val);
-            Node* intermediateNode = m_head;
-            for (int i = 0; i < pos; ++i) {
-                intermediateNode = intermediateNode->m_next;
+            if (isEmpty()) {
+                push_back(val);
+                m_size++;
+                return;
             }
-            node->m_next = intermediateNode->m_next->m_next;
+            if (pos == 0) {
+                node->m_next = m_head;
+                m_head = node;
+                m_size++;
+                return;
+            }
+            if (outOfRange(pos)) return;
+            Node* intermediateNode = m_head;
+            size_t cur_pos = 0;
+            while (cur_pos < pos - 1) {
+                intermediateNode = intermediateNode->m_next;
+                cur_pos++;
+            }
+            node->m_next = intermediateNode->m_next;
             intermediateNode->m_next = node;
             m_size++;
         }
 
-        void erase(int pos = 0) {
-            if (!isEmpty()) {
-                Node* intermediateNode = m_head;
-                Node* deleteNode;
-                for (int i=0; i < pos; i++) {
+        void erase(size_t pos = 0) {
+            if (isEmpty()) return;
+            if (outOfRange(pos)) exit;
+            if (size() == 1) {
+                delete m_head;
+                m_head = nullptr;
+                m_size = 0;
+                return;
+            }
+            Node* intermediateNode = m_head;
+            size_t cur_pos = 0;
+                while (cur_pos < pos-1) {
                     intermediateNode = intermediateNode->m_next;
+                    cur_pos++;
                 }
-                if (intermediateNode->m_next) {
-                    deleteNode = intermediateNode;
-                    intermediateNode = intermediateNode->m_next->m_next;
-                }
+                Node* deleteNode = intermediateNode->m_next;
+                deleteNode->m_next == nullptr ? intermediateNode->m_next = nullptr : intermediateNode->m_next = deleteNode->m_next;
                 delete deleteNode;
                 m_size--;
-            }
         }
 
-        int size() const {
+        size_t size() const {
             return m_size;
         }
 
         bool isEmpty() const {
             return m_head == nullptr;
+        }
+
+        bool outOfRange(int pos) {
+            if (pos > m_size-1) {
+                std::cout << "Заданная позиция находится за пределами диапазона списка" << std::endl;
+                return true;
+            }
+            return false;
         }
 
         Node* begin() const {
@@ -92,10 +119,13 @@ class List {
             return intermediateNode;
         }
 
-        Node* operator[] (int pos) {
+        T& operator[] (size_t pos) const {
+            if (outOfRange(pos)) exit;
             Node* intermediateNode = m_head;
-            for (int i = 0; i < pos; ++i) {
+            size_t cur_pos = 0;
+            while (cur_pos < pos) {
                 intermediateNode = intermediateNode->m_next;
+                cur_pos++;
             }
             return intermediateNode->m_data;
         }
