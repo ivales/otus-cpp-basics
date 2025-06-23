@@ -30,10 +30,10 @@ class List {
         void erase(size_t pos = 0);
         size_t size() const;
         bool isEmpty() const;
-        bool outOfRange(int pos);
+        bool outOfRange(const size_t pos) const;
         typename List<T>::Iter begin() const;
         typename List<T>::Iter end() const;
-        T& operator[] (size_t pos) const;
+        T& operator[] (const size_t pos) const;
         void print() const;
 };
 

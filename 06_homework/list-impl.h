@@ -124,7 +124,7 @@ bool List<T>::isEmpty() const {
 }
 
 template <typename T>
-bool List<T>::outOfRange(int pos) {
+bool List<T>::outOfRange(const size_t pos) const {
     if (pos > m_size-1) {
         std::cout << "Заданная позиция находится за пределами диапазона списка" << std::endl;
         return true;
@@ -147,7 +147,7 @@ typename List<T>::Iter List<T>::end() const {
 }
 
 template <typename T>
-T& List<T>::operator[] (size_t pos) const {
+T& List<T>::operator[] (const size_t pos) const {
     if (outOfRange(pos)) exit;
     Node* intermediateNode = m_head;
     size_t cur_pos = 0;

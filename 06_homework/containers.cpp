@@ -40,10 +40,6 @@ int main() {
     list->print();
     list->push_back(30);
     list->print();
-    std::cout << list[2] << std::endl; Вот тут ошибка типов - он пытается не тип даты вернуть, а тип листа
-    // example.insert(4, 20);
-    // example.print();
-    // example.push_back(30);
-    // example.print();
+    std::cout << (*list)[2] << std::endl; //Вот тут ошибка типов - он пытается не тип даты вернуть, а тип листа
     return 0;
 }
