@@ -57,6 +57,14 @@ ForwardList<T>::ForwardList(const ForwardList<T>& a) {
 }
 
 template <typename T>
+ForwardList<T>::ForwardList(ForwardList<T>&& a) {
+    this->m_head = a.begin();
+    this->m_size = a.size();
+    a.begin() = nullptr;
+    a.m_size = 0;
+}
+
+template <typename T>
 ForwardList<T>::~ForwardList() {
     while (this->m_head != nullptr) {
         erase();

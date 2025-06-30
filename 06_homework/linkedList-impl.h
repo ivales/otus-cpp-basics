@@ -2,7 +2,6 @@
 
 #include <cstddef>
 #include <iostream>
-#include "list.h"
 
 template <typename T>
 struct LinkedList<T>::Node {
@@ -71,6 +70,16 @@ LinkedList<T>::LinkedList(const LinkedList<T>& a) {
     m_head = a.begin();
     m_tail = a.end();
     this->m_size = a.size();
+}
+
+template <typename T>
+LinkedList<T>::LinkedList(LinkedList<T>&& a) {
+    this->m_head = a.begin();
+    this->m_tail = a.end();
+    this->m_size = a.size();
+    a.begin() = nullptr;
+    a.end() = nullptr;
+    a.m_size = 0;
 }
 
 template <typename T>

@@ -24,6 +24,7 @@ class ForwardList : public List<T> {
     public:            
         ForwardList();
         ForwardList(const ForwardList<T>& a);
+        ForwardList(ForwardList<T>&& a);
         ~ForwardList();
         Iter begin();
         Iter end();
@@ -44,6 +45,7 @@ class LinkedList : public List<T> {
     public:
         LinkedList();
         LinkedList(const LinkedList<T>& a);
+        LinkedList(LinkedList<T>&& a);
         ~LinkedList();
         Iter begin();
         Iter end();
