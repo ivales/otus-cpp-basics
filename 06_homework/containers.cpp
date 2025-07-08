@@ -64,6 +64,6 @@ int main() {
     linkedList->push_back(30);
     linkedList->print();
     std::cout << (*linkedList)[2] << std::endl;
-    // std::cout << linkedList->begin().get() << std::endl; // Вот так возникает ошибка компиляции из-за разнесения объявления и описания по разным файлам
+    std::cout << (*linkedList->begin()) << std::endl; // Вот так возникает ошибка компиляции из-за разнесения объявления и описания по разным файлам
     return 0;
 }

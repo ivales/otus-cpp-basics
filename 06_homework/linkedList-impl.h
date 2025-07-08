@@ -159,15 +159,15 @@ void LinkedList<T>::erase(size_t pos) {
 }
 
 template <typename T>
-typename LinkedList<T>::Iter begin() {
-    typename LinkedList<T>::Iter iter(typename LinkedList<T>::m_head);
+typename LinkedList<T>::Iter LinkedList<T>::begin() {
+    typename LinkedList<T>::Iter iter(this->m_head);
     return iter;
 
 }
 
 template <typename T>
-typename LinkedList<T>::Iter end() {
-    typename LinkedList<T>::Iter iter(typename LinkedList<T>::m_tail);
+typename LinkedList<T>::Iter LinkedList<T>::end() {
+    typename LinkedList<T>::Iter iter(this->m_tail);
     return iter;
 }
 

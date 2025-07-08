@@ -136,14 +136,14 @@ void ForwardList<T>::erase(size_t pos) {
 }
 
 template <typename T>
-typename ForwardList<T>::Iter begin() {
+typename ForwardList<T>::Iter ForwardList<T>::begin() {
     typename ForwardList<T>::Iter iter(typename ForwardList<T>::m_head);
     return iter;
 
 }
 
 template <typename T>
-typename ForwardList<T>::Iter end() {
+typename ForwardList<T>::Iter ForwardList<T>::end() {
     typename ForwardList<T>::Iter iter(typename ForwardList<T>::m_head);
     while (iter.next() != nullptr) {
         ++iter;
