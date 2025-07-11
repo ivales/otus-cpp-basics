@@ -19,9 +19,9 @@ struct ForwardList<T>::Node {
 template <typename T>
 class ForwardList<T>::Iter {
     private:
-        Node* m_current;
+        typename ForwardList<T>::Node* m_current;
     public:
-        Iter (Node* node) : m_current(node) {};
+        Iter (ForwardList<T>::Node* node) : m_current(node) {};
 
         const T& operator *() const {
             return m_current->m_data;
@@ -137,14 +137,14 @@ void ForwardList<T>::erase(size_t pos) {
 
 template <typename T>
 typename ForwardList<T>::Iter ForwardList<T>::begin() {
-    typename ForwardList<T>::Iter iter(typename ForwardList<T>::m_head);
+    typename ForwardList<T>::Iter iter(this->m_head);
     return iter;
 
 }
 
 template <typename T>
 typename ForwardList<T>::Iter ForwardList<T>::end() {
-    typename ForwardList<T>::Iter iter(typename ForwardList<T>::m_head);
+    typename ForwardList<T>::Iter iter(this->m_head);
     while (iter.next() != nullptr) {
         ++iter;
     }
