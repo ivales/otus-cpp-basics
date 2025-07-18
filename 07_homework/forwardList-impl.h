@@ -88,7 +88,7 @@ void ForwardList<T>::push_back(T val) {
 }
 
 template <typename T>
-void ForwardList<T>::insert(size_t pos, T val) {
+void ForwardList<T>::insert(int pos, T val) {
     Node* node = new Node(val);
     if (List<T>::isEmpty()) {
         push_back(val);
@@ -103,7 +103,7 @@ void ForwardList<T>::insert(size_t pos, T val) {
     }
     if (List<T>::outOfRange(pos)) return;
     Node* intermediateNode = this->m_head;
-    size_t cur_pos = 0;
+    int cur_pos = 0;
     while (cur_pos < pos - 1) {
         intermediateNode = intermediateNode->m_next;
         cur_pos++;
@@ -114,7 +114,7 @@ void ForwardList<T>::insert(size_t pos, T val) {
 }
 
 template <typename T>
-void ForwardList<T>::erase(size_t pos) {
+void ForwardList<T>::erase(int pos) {
     if (List<T>::isEmpty()) return;
     if (List<T>::outOfRange(pos)) exit;
     if (List<T>::size() == 1) {
@@ -124,7 +124,7 @@ void ForwardList<T>::erase(size_t pos) {
         return;
     }
     Node* intermediateNode = this->m_head;
-    size_t cur_pos = 0;
+    int cur_pos = 0;
         while (cur_pos < pos-1) {
             intermediateNode = intermediateNode->m_next;
             cur_pos++;
@@ -152,10 +152,10 @@ typename ForwardList<T>::Iter ForwardList<T>::end() {
 }
 
 template <typename T>
-T& ForwardList<T>::operator[] (const size_t pos) const {
+T& ForwardList<T>::operator[] (const int pos) const {
     if (List<T>::outOfRange(pos)) exit;
     Node* intermediateNode = this->m_head;
-    size_t cur_pos = 0;
+    int cur_pos = 0;
     while (cur_pos < pos) {
         intermediateNode = intermediateNode->m_next;
         cur_pos++;

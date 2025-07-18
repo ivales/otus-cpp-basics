@@ -11,6 +11,7 @@ class Array
     public:
         Array();
         Array(const Array<T> & a);
+        Array(const Array<T> && a);
         Array(int size);
         ~Array();
 

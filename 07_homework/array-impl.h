@@ -26,6 +26,20 @@ Array<T>::Array(const Array<T> & a) {
 }
 
 template <typename T>
+Array<T>::Array(const Array<T> && a) {
+    m_size = a.m_size;
+    m_capacity = m_size;
+    m_data = NULL;
+    if (m_size != 0)
+        m_data = new T[m_size];
+    else
+        m_data = 0;
+    for (int i = 0; i < m_size; ++i)
+        m_data[i] = a.m_data[i];
+    a.~Array();
+}
+
+template <typename T>
 Array<T>::Array(int size) {
     m_size = size;
     m_capacity = size;
@@ -37,8 +51,8 @@ Array<T>::Array(int size) {
 
 template <typename T>
 Array<T>::~Array() {
-    if (m_data)
-        delete[] m_data;
+    while (m_size != 0)
+        erase(m_size);
 }
 
 template <typename T>

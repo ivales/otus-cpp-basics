@@ -105,7 +105,7 @@ void LinkedList<T>::push_back(T val) {
 }
 
 template <typename T>
-void LinkedList<T>::insert(size_t pos, T val) {
+void LinkedList<T>::insert(int pos, T val) {
     Node* node = new Node(val);
     if (List<T>::isEmpty()) {
         push_back(val);
@@ -121,7 +121,7 @@ void LinkedList<T>::insert(size_t pos, T val) {
     }
     if (List<T>::outOfRange(pos)) return;
     Node* prevNode = m_head;
-    size_t cur_pos = 0;
+    int cur_pos = 0;
     while (cur_pos < pos - 1) {
         prevNode = prevNode->m_next;
         cur_pos++;
@@ -136,7 +136,7 @@ void LinkedList<T>::insert(size_t pos, T val) {
 }
 
 template <typename T>
-void LinkedList<T>::erase(size_t pos) {
+void LinkedList<T>::erase(int pos) {
     if (List<T>::isEmpty()) return;
     if (List<T>::outOfRange(pos)) exit;
     if (List<T>::size() == 1) {
@@ -147,7 +147,7 @@ void LinkedList<T>::erase(size_t pos) {
         return;
     }
     Node* intermediateNode = this->m_head;
-    size_t cur_pos = 0;
+    int cur_pos = 0;
         while (cur_pos < pos ) {
             intermediateNode = intermediateNode->m_next;
             cur_pos++;
@@ -172,10 +172,10 @@ typename LinkedList<T>::Iter LinkedList<T>::end() {
 }
 
 template <typename T>
-T& LinkedList<T>::operator[] (const size_t pos) const {
+T& LinkedList<T>::operator[] (const int pos) const {
     if (List<T>::outOfRange(pos)) exit;
     Node* intermediateNode = this->m_head;
-    size_t cur_pos = 0;
+    int cur_pos = 0;
     while (cur_pos < pos) {
         intermediateNode = intermediateNode->m_next;
         cur_pos++;

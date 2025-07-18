@@ -5,7 +5,7 @@
 
 
 template <typename T>
-size_t List<T>::size() const {
+int List<T>::size() const {
     return m_size;
 }
 
@@ -15,7 +15,7 @@ bool List<T>::isEmpty() const {
 }
 
 template <typename T>
-bool List<T>::outOfRange(const size_t pos) const {
+bool List<T>::outOfRange(const int pos) const {
     if (pos > m_size-1) {
         std::cout << "Заданная позиция находится за пределами диапазона списка" << std::endl;
         return true;

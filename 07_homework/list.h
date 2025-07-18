@@ -6,12 +6,12 @@ class List {
     public:
         int m_size;
         bool isEmpty() const;
-        bool outOfRange(const size_t pos) const;
-        size_t size() const;
+        bool outOfRange(const int pos) const;
+        int size() const;
         virtual void push_back(T val) = 0;
-        virtual void insert(size_t pos, T val) = 0;
-        virtual void erase(size_t pos = 0) = 0;
-        virtual T& operator[] (const size_t pos) const = 0;
+        virtual void insert(int pos, T val) = 0;
+        virtual void erase(int pos = 0) = 0;
+        virtual T& operator[] (const int pos) const = 0;
         virtual void print() const = 0;
 };
 
@@ -29,9 +29,9 @@ class ForwardList : public List<T> {
         Iter begin();
         Iter end();
         void push_back(T val) override;
-        void insert(size_t pos, T val) override;
-        void erase(size_t pos = 0) override;
-        T& operator[] (const size_t pos) const override;
+        void insert(int pos, T val) override;
+        void erase(int pos = 0) override;
+        T& operator[] (const int pos) const override;
         void print() const override;
 };
 
@@ -50,9 +50,9 @@ class LinkedList : public List<T> {
         Iter begin();
         Iter end();
         void push_back(T val) override ;
-        void insert(size_t pos, T val) override;
-        void erase(size_t pos = 0) override;
-        T& operator[] (const size_t pos) const override;
+        void insert(int pos, T val) override;
+        void erase(int pos = 0) override;
+        T& operator[] (const int pos) const override;
         void print() const override;
 };
 
