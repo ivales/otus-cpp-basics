@@ -52,7 +52,7 @@ ForwardList<T>::ForwardList() {
 
 template <typename T>
 ForwardList<T>::ForwardList(const ForwardList<T>& a) {
-    this->m_head = a.begin();
+    m_head = a.begin();
     this->m_size = a.size();
 }
 
