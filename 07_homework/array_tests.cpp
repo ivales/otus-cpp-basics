@@ -18,9 +18,7 @@ TEST(Array, push_back) {
 
 TEST(Array, push_forward) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
     array.insert(0, 0);
 
     EXPECT_EQ(array[0], 0);
@@ -28,9 +26,7 @@ TEST(Array, push_forward) {
 
 TEST(Array, push_middle) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
     array.insert(4, 10);
 
     EXPECT_EQ(array[4], 10);
@@ -38,20 +34,15 @@ TEST(Array, push_middle) {
 
 TEST(Array, erase_begin) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
     array.erase(0);
-
     EXPECT_EQ(array.size(), 8);
     EXPECT_EQ(array[0], 2);
 }
 
 TEST(Array, erase_end) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
     array.erase(9);
 
     EXPECT_EQ(array.size(), 8);
@@ -60,9 +51,7 @@ TEST(Array, erase_end) {
 
 TEST(Array, erase_middle) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
     array.erase(3);
 
     EXPECT_EQ(array.size(), 8);
@@ -71,27 +60,21 @@ TEST(Array, erase_middle) {
 
 TEST(Array, get_el) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
 
     EXPECT_EQ(array[3], 4);
 }
 
 TEST(Array, get_size) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
 
     EXPECT_EQ(array.size(), 9);
 }
 
 TEST(Array, copy) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
     Array<int> arrayCopy = array;
     for (int i = 1; i < 10; i++) {
         EXPECT_EQ(array[i], arrayCopy[i]);
@@ -101,17 +84,13 @@ TEST(Array, copy) {
 
 TEST(Array, deleting) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
     EXPECT_EQ(array.size(), 0);
 }
 
 TEST(Array, moving) {
     Array<int> array;
-    for (int i = 1; i < 10; i++) {
-        array.push_back(i);
-    }
+    array.makeTestArray(10);
     Array<int> arrayCopy = std::move(array);
     for (int i = 1; i < 10; i++) {
         EXPECT_EQ(array[i], arrayCopy[i]);
