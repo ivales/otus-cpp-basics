@@ -116,7 +116,7 @@ void ForwardList<T>::insert(int pos, T val) {
 template <typename T>
 void ForwardList<T>::erase(int pos) {
     if (List<T>::isEmpty()) return;
-    if (List<T>::outOfRange(pos)) exit;
+    if (List<T>::outOfRange(pos)) return;
     if (List<T>::size() == 1) {
         delete this->m_head;
         this->m_head = nullptr;

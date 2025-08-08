@@ -76,34 +76,29 @@ TEST(ForwardList, get_size) {
 TEST(ForwardList, copy) {
     ForwardList<int> forwardList;
     forwardList.makeTestForwardList(10);
-    ForwardList<int> forwardListCopy = forwardList;
+    ForwardList<int> forwardListCopy(forwardList);
     for (int i = 1; i < 10; i++) {
         EXPECT_EQ(forwardList[i], forwardListCopy[i]);
     }
     EXPECT_EQ(forwardList.size(), forwardListCopy.size());
 }
 
-// TEST(ForwardList, deleting) {
-//     ForwardList<int> forwardList;
-//     for (int i = 1; i < 10; i++) {
-//         forwardList.push_back(i);
-//     }
-//     EXPECT_EQ(forwardList.size(), 0);
-// }
+TEST(ForwardList, deleting) {
+    ForwardList<int> forwardList;
+    for (int i = 1; i < 10; i++) {
+        forwardList.push_back(i);
+    }
+    EXPECT_EQ(forwardList.size(), 0);
+}
 
-// TEST(ForwardList, moving) {
-//     ForwardList<int> forwardList;
-//     for (int i = 1; i < 10; i++) {
-//         forwardList.push_back(i);
-//     }
-//     ForwardList<int> forwardListCopy = std::move(forwardList);
-//     for (int i = 1; i < 10; i++) {
-//         EXPECT_EQ(forwardList[i], forwardListCopy[i]);
-//     }
-//     EXPECT_EQ(forwardList.size(), 0);
-// }
-
-// int main(int argc, char** argv) {
-//     testing::InitGoogleTest(&argc, argv);
-//     return RUN_ALL_TESTS();
-// }
+TEST(ForwardList, moving) {
+    ForwardList<int> forwardList;
+    for (int i = 1; i < 10; i++) {
+        forwardList.push_back(i);
+    }
+    ForwardList<int> forwardListCopy(std::move(forwardList));
+    for (int i = 1; i < 10; i++) {
+        EXPECT_EQ(forwardList[i], forwardListCopy[i]);
+    }
+    EXPECT_EQ(forwardList.size(), 0);
+}
