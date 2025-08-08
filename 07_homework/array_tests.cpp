@@ -104,7 +104,6 @@ TEST(Array, deleting) {
     for (int i = 1; i < 10; i++) {
         array.push_back(i);
     }
-    array.~Array();
     EXPECT_EQ(array.size(), 0);
 }
 
