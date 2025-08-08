@@ -26,8 +26,8 @@ class ForwardList : public List<T> {
         ForwardList(const ForwardList<T>& a);
         ForwardList(ForwardList<T>&& a);
         ~ForwardList();
-        Iter begin();
-        Iter end();
+        Iter begin() const;
+        Iter end() const;
         void push_back(T val) override;
         void insert(int pos, T val) override;
         void erase(int pos = 0) override;
