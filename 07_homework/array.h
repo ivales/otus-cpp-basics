@@ -23,6 +23,7 @@ class Array
         int size() const;
         T& operator[] (int i);
         void print() const;
+        void makeTestArray(int size);
 };
 
 #include "array-impl.h"
