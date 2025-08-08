@@ -173,6 +173,12 @@ void ForwardList<T>::print() const {
     std::cout << std::endl;
 }
 
+template <typename T>
+void ForwardList<T>::makeTestForwardList(int size) {
+    for (int i = 1; i < size; i++) {
+        push_back(i);
+    }
+}
 
 
 

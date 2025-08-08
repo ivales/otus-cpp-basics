@@ -33,6 +33,7 @@ class ForwardList : public List<T> {
         void erase(int pos = 0) override;
         T& operator[] (const int pos) const override;
         void print() const override;
+        void makeTestForwardList(int size);
 };
 
 template <typename T>
