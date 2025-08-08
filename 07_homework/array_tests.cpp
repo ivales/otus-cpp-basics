@@ -85,6 +85,7 @@ TEST(Array, copy) {
 TEST(Array, deleting) {
     Array<int> array;
     array.makeTestArray(10);
+    //Как тогда проверить, что после вызова деструктора объект удален из памяти?
     EXPECT_EQ(array.size(), 0);
 }
 
@@ -95,6 +96,7 @@ TEST(Array, moving) {
     for (int i = 1; i < 10; i++) {
         EXPECT_EQ(array[i], arrayCopy[i]);
     }
+    //Как тогда проверить, что после перемещения перемещаемый объект удален из памяти?
     EXPECT_EQ(array.size(), 0);
 }
 
