@@ -60,8 +60,6 @@ template <typename T>
 ForwardList<T>::ForwardList(ForwardList<T>&& a) {
     m_head = a.begin().get();
     this->m_size = a.size();
-    a.begin() = nullptr;
-    a.m_size = 0;
 }
 
 template <typename T>
@@ -123,16 +121,23 @@ void ForwardList<T>::erase(int pos) {
         this->m_size = 0;
         return;
     }
-    Node* intermediateNode = this->m_head;
-    int cur_pos = 0;
-        while (cur_pos < pos-1) {
-            intermediateNode = intermediateNode->m_next;
-            cur_pos++;
-        }
-        Node* deleteNode = intermediateNode->m_next;
-        deleteNode->m_next == nullptr ? intermediateNode->m_next = nullptr : intermediateNode->m_next = deleteNode->m_next;
+    if (pos == 0) {
+        Node* deleteNode = this->m_head;
+        this->m_head = deleteNode->m_next;
         delete deleteNode;
         this->m_size--;
+        return;
+    }
+    Node* intermediateNode = this->m_head;
+    int cur_pos = 0;
+    while (cur_pos < pos-1) {
+        intermediateNode = intermediateNode->m_next;
+        cur_pos++;
+    }
+    Node* deleteNode = intermediateNode->m_next;
+    deleteNode->m_next == nullptr ? intermediateNode->m_next = nullptr : intermediateNode->m_next = deleteNode->m_next;
+    delete deleteNode;
+    this->m_size--;
 }
 
 template <typename T>

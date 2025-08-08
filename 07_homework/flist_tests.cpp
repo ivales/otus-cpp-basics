@@ -76,8 +76,8 @@ TEST(ForwardList, get_size) {
 TEST(ForwardList, copy) {
     ForwardList<int> forwardList;
     forwardList.makeTestForwardList(10);
-    ForwardList<int> forwardListCopy(forwardList);
-    for (int i = 1; i < 10; i++) {
+    ForwardList<int> forwardListCopy = forwardList;
+    for (int i = 0; i < 9; i++) {
         EXPECT_EQ(forwardList[i], forwardListCopy[i]);
     }
     EXPECT_EQ(forwardList.size(), forwardListCopy.size());
@@ -85,20 +85,16 @@ TEST(ForwardList, copy) {
 
 TEST(ForwardList, deleting) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
     EXPECT_EQ(forwardList.size(), 0);
 }
 
 TEST(ForwardList, moving) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
-    ForwardList<int> forwardListCopy(std::move(forwardList));
-    for (int i = 1; i < 10; i++) {
-        EXPECT_EQ(forwardList[i], forwardListCopy[i]);
+    forwardList.makeTestForwardList(10);
+    ForwardList<int> forwardListCopy = (std::move(forwardList));
+    for (int i = 0; i < 9; i++) {
+        EXPECT_EQ(forwardList[i], i);
     }
     EXPECT_EQ(forwardList.size(), 0);
 }
