@@ -36,7 +36,6 @@ Array<T>::Array(const Array<T> && a) {
         m_data = 0;
     for (int i = 0; i < m_size; ++i)
         m_data[i] = a.m_data[i];
-    a.~Array();
 }
 
 template <typename T>
@@ -57,7 +56,7 @@ Array<T>::~Array() {
 
 template <typename T>
 int Array<T>::max (int a, int b) {
-    return a < b ? a : b;
+    return a > b ? a : b;
 }
 
 template <typename T>
