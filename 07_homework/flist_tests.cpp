@@ -18,9 +18,7 @@ TEST(ForwardList, push_back) {
 
 TEST(ForwardList, push_forward) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
     forwardList.insert(0, 0);
 
     EXPECT_EQ(forwardList[0], 0);
@@ -28,9 +26,7 @@ TEST(ForwardList, push_forward) {
 
 TEST(ForwardList, push_middle) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
     forwardList.insert(4, 10);
 
     EXPECT_EQ(forwardList[4], 10);
@@ -38,9 +34,7 @@ TEST(ForwardList, push_middle) {
 
 TEST(ForwardList, erase_begin) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
     forwardList.erase(0);
 
     EXPECT_EQ(forwardList.size(), 8);
@@ -49,9 +43,7 @@ TEST(ForwardList, erase_begin) {
 
 TEST(forwardList, erase_end) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
     forwardList.erase(9);
 
     EXPECT_EQ(forwardList.size(), 8);
@@ -60,9 +52,7 @@ TEST(forwardList, erase_end) {
 
 TEST(ForwardList, erase_middle) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
     forwardList.erase(3);
 
     EXPECT_EQ(forwardList.size(), 8);
@@ -71,27 +61,21 @@ TEST(ForwardList, erase_middle) {
 
 TEST(ForwardList, get_el) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
 
     EXPECT_EQ(forwardList[3], 4);
 }
 
 TEST(ForwardList, get_size) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
 
     EXPECT_EQ(forwardList.size(), 9);
 }
 
 TEST(ForwardList, copy) {
     ForwardList<int> forwardList;
-    for (int i = 1; i < 10; i++) {
-        forwardList.push_back(i);
-    }
+    forwardList.makeTestForwardList(10);
     ForwardList<int> forwardListCopy = forwardList;
     for (int i = 1; i < 10; i++) {
         EXPECT_EQ(forwardList[i], forwardListCopy[i]);
