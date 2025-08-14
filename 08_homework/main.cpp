@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <limits>
+#include <thread>
 #include <vector>
 
 #include "CRC32.hpp"
@@ -9,6 +10,21 @@
 /// @brief Переписывает последние 4 байта значением value
 void replaceLastFourBytes(std::vector<char> &data, uint32_t value) {
   std::copy_n(reinterpret_cast<const char *>(&value), 4, data.end() - 4);
+}
+
+/// @brief Вычисляет CRC32 указанного файла
+void crc32check(std::vector<char> &result, size_t start, size_t end, uint32_t originalCrc32, uint32_t resultCrc32) {
+    for (size_t i = start; i < end; ++i) {
+    // Заменяем последние четыре байта на значение i
+      replaceLastFourBytes(result, uint32_t(i));
+      // Вычисляем CRC32 текущего вектора result
+      auto currentCrc32 = crc32(result.data() + result.size() - 4, 4, resultCrc32);
+
+      if (currentCrc32 == originalCrc32) {
+        std::cout << "Success\n";
+        return;
+      }
+  }
 }
 
 /**
@@ -36,26 +52,29 @@ std::vector<char> hack(const std::vector<char> &original,
    */
 
   auto resultCrc32 = crc32(result.data() + original.size(), injection.size(), originalCrc32);
-
+  
+  int threadNumbers = std::thread::hardware_concurrency();
+  std::vector<std::thread> threads;
   const size_t maxVal = std::numeric_limits<uint32_t>::max();
-  for (size_t i = 0; i < maxVal; ++i) {
-    // Заменяем последние четыре байта на значение i
-    replaceLastFourBytes(result, uint32_t(i));
-    // Вычисляем CRC32 текущего вектора result
-    auto currentCrc32 = crc32(result.data() + original.size() + injection.size(), 4, resultCrc32);
+  auto chunkSize = maxVal / threadNumbers;
 
-    if (currentCrc32 == originalCrc32) {
-      std::cout << "Success\n";
-      return result;
-    }
-    // Отображаем прогресс
-    if (i % 1000 == 0) {
-      std::cout << "progress: "
-                << static_cast<double>(i) / static_cast<double>(maxVal)
-                << std::endl;
-    }
+  for (int i = 0; i < threadNumbers; ++i) {
+    int start = i * chunkSize;
+    int end = (i == threadNumbers - 1) ? maxVal : (i + 1) * chunkSize;
+    threads.emplace_back(crc32check, result, start, end, originalCrc32, resultCrc32);
   }
-  throw std::logic_error("Can't hack");
+  
+  for (auto& thread : threads) {
+        thread.join();
+   }
+    // Отображаем прогресс
+  //   if (i % 1000 == 0) {
+  //     std::cout << "progress: "
+  //               << static_cast<double>(i) / static_cast<double>(maxVal)
+  //               << std::endl;
+  //   }
+  // }
+  // throw std::logic_error("Can't hack");
 }
 
 int main(int argc, char **argv) {
