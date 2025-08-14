@@ -38,11 +38,11 @@ void crc32check(std::vector<char> &result, size_t start, size_t end, uint32_t or
  * оригинального вектора
  * @return новый вектор
  */
-std::vector<char> hack(const std::vector<char> &original,
-                       const std::string &injection) {
+void hack(const std::vector<char> &original,
+                       const std::string &injection, size_t start, size_t end, std::vector<char> result) {
   const uint32_t originalCrc32 = crc32(original.data(), original.size());
 
-  std::vector<char> result(original.size() + injection.size() + 4);
+  result.resize(original.size() + injection.size() + 4);
   auto it = std::copy(original.begin(), original.end(), result.begin());
   std::copy(injection.begin(), injection.end(), it);
 
@@ -52,29 +52,24 @@ std::vector<char> hack(const std::vector<char> &original,
    */
 
   auto resultCrc32 = crc32(result.data() + original.size(), injection.size(), originalCrc32);
-  
-  int threadNumbers = std::thread::hardware_concurrency();
-  std::vector<std::thread> threads;
-  const size_t maxVal = std::numeric_limits<uint32_t>::max();
-  auto chunkSize = maxVal / threadNumbers;
 
-  for (int i = 0; i < threadNumbers; ++i) {
-    int start = i * chunkSize;
-    int end = (i == threadNumbers - 1) ? maxVal : (i + 1) * chunkSize;
-    threads.emplace_back(crc32check, result, start, end, originalCrc32, resultCrc32);
-  }
-  
-  for (auto& thread : threads) {
-        thread.join();
-   }
+  for (size_t i = start; i < end; ++i) {
+    // Заменяем последние четыре байта на значение i
+    replaceLastFourBytes(result, uint32_t(i));
+    // Вычисляем CRC32 текущего вектора result
+    auto currentCrc32 = crc32(result.data() + original.size() + injection.size(), 4, resultCrc32);
+
+    if (currentCrc32 == originalCrc32) {
+      std::cout << "Success\n";
+      return;
+    }
     // Отображаем прогресс
-  //   if (i % 1000 == 0) {
-  //     std::cout << "progress: "
-  //               << static_cast<double>(i) / static_cast<double>(maxVal)
-  //               << std::endl;
-  //   }
-  // }
-  // throw std::logic_error("Can't hack");
+    if (i % 1000 == 0) {
+      std::cout << "progress: "
+                << static_cast<double>(i) / static_cast<double>(end)
+                << std::endl;
+    }
+  }
 }
 
 int main(int argc, char **argv) {
@@ -86,7 +81,24 @@ int main(int argc, char **argv) {
 
   try {
     const std::vector<char> data = readFromFile(argv[1]);
-    const std::vector<char> badData = hack(data, "He-he-he");
+    std::vector<char> result(data.size());
+    const size_t maxVal = std::numeric_limits<uint32_t>::max();
+    size_t threadsNumber = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads;
+
+    size_t chunk_size = maxVal / threadsNumber;
+    for (size_t i = 0; i < threadsNumber; ++i) {
+        size_t start = i * chunk_size;
+        size_t end = (i == threadsNumber - 1) ? maxVal : (i + 1) * chunk_size;
+        threads.emplace_back(hack, data, "He-he-he", start, end, result);
+    }
+
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+
+    const std::vector<char> badData = result;
     writeToFile(argv[2], badData);
   } catch (std::exception &ex) {
     std::cerr << ex.what() << '\n';
