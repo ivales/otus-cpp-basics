@@ -1,10 +1,8 @@
 #include <algorithm>
 #include <atomic>
-#include <condition_variable>
 #include <iostream>
 #include <limits>
 #include <time.h>
-#include <mutex>
 #include <thread>
 #include <vector>
 
@@ -31,9 +29,6 @@ std::atomic<bool> isRunning(true);
  */
 void hack(const std::vector<char> &original,
                        const std::string &injection, size_t start, size_t end, std::vector<char> &badData) {
-
-
-
                         
   const uint32_t originalCrc32 = crc32(original.data(), original.size());
   std::vector<char> result(original.size() + injection.size() + 4);
@@ -51,24 +46,24 @@ void hack(const std::vector<char> &original,
   for (size_t i = start; i < end; ++i) {
     if (isRunning) {
     // Заменяем последние четыре байта на значение i
-    replaceLastFourBytes(result, uint32_t(i));
+      replaceLastFourBytes(result, uint32_t(i));
     // Вычисляем CRC32 текущего вектора result
-    auto currentCrc32 = crc32(result.data() + original.size() + injection.size(), 4, resultCrc32);
+      auto currentCrc32 = crc32(result.data() + original.size() + injection.size(), 4, resultCrc32);
 
-    if (currentCrc32 == originalCrc32) {
-      std::cout << "Success\n";
-      badData = result;
-      isRunning = false;
-      return;
-    }
+      if (currentCrc32 == originalCrc32) {
+        std::cout << "Success\n";
+        badData = result;
+        isRunning = false;
+        return;
+      }
       // Отображаем прогресс
       // if (i % 1000 == 0) {
       //   std::cout << "progress: "
       //             << static_cast<double>(i) / static_cast<double>(end)
       //             << std::endl;
       // }
-  }
-  else return;
+    }
+    else return;
   }
 }
 
@@ -86,7 +81,8 @@ int main(int argc, char **argv) {
     const std::vector<char> data = readFromFile(argv[1]);
     std::vector<char> badData;
     const size_t maxVal = std::numeric_limits<uint32_t>::max();
-    size_t threadsNumber = std::thread::hardware_concurrency();
+    // size_t threadsNumber = std::thread::hardware_concurrency();
+    size_t threadsNumber = 4;
     std::vector<std::thread> threads;
 
     size_t chunk_size = maxVal / threadsNumber;
