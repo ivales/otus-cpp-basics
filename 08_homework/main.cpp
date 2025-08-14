@@ -39,10 +39,10 @@ void crc32check(std::vector<char> &result, size_t start, size_t end, uint32_t or
  * @return новый вектор
  */
 void hack(const std::vector<char> &original,
-                       const std::string &injection, size_t start, size_t end, std::vector<char> result) {
+                       const std::string &injection, size_t start, size_t end, std::vector<char> &badData) {
   const uint32_t originalCrc32 = crc32(original.data(), original.size());
 
-  result.resize(original.size() + injection.size() + 4);
+  std::vector<char> result(original.size() + injection.size() + 4);
   auto it = std::copy(original.begin(), original.end(), result.begin());
   std::copy(injection.begin(), injection.end(), it);
 
@@ -61,14 +61,15 @@ void hack(const std::vector<char> &original,
 
     if (currentCrc32 == originalCrc32) {
       std::cout << "Success\n";
+      badData = result;
       return;
     }
     // Отображаем прогресс
-    if (i % 1000 == 0) {
-      std::cout << "progress: "
-                << static_cast<double>(i) / static_cast<double>(end)
-                << std::endl;
-    }
+    // if (i % 1000 == 0) {
+    //   std::cout << "progress: "
+    //             << static_cast<double>(i) / static_cast<double>(end)
+    //             << std::endl;
+    // }
   }
 }
 
@@ -81,7 +82,7 @@ int main(int argc, char **argv) {
 
   try {
     const std::vector<char> data = readFromFile(argv[1]);
-    std::vector<char> result(data.size());
+    std::vector<char> badData;
     const size_t maxVal = std::numeric_limits<uint32_t>::max();
     size_t threadsNumber = std::thread::hardware_concurrency();
     std::vector<std::thread> threads;
@@ -90,15 +91,13 @@ int main(int argc, char **argv) {
     for (size_t i = 0; i < threadsNumber; ++i) {
         size_t start = i * chunk_size;
         size_t end = (i == threadsNumber - 1) ? maxVal : (i + 1) * chunk_size;
-        threads.emplace_back(hack, data, "He-he-he", start, end, result);
+        threads.emplace_back(hack, data, "He-he-he", start, end, std::ref(badData));
     }
 
     for (auto& thread : threads) {
         thread.join();
     }
 
-
-    const std::vector<char> badData = result;
     writeToFile(argv[2], badData);
   } catch (std::exception &ex) {
     std::cerr << ex.what() << '\n';
