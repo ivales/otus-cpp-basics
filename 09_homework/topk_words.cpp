@@ -1,5 +1,3 @@
-// Read files and prints top k word by frequency
-
 #include <algorithm>
 #include <cctype>
 #include <cstdlib>
@@ -10,16 +8,36 @@
 #include <map>
 #include <vector>
 #include <chrono>
+#include <thread>
+#include <mutex>
+#include <string>
 
 const size_t TOPK = 10;
 
 using Counter = std::map<std::string, std::size_t>;
 
+std::mutex counter_mtx; 
+
 std::string tolower(const std::string &str);
 
-void count_words(std::istream& stream, Counter&);
+void count_words(std::istream& stream, Counter& counter);
 
 void print_topk(std::ostream& stream, const Counter&, const size_t k);
+
+void counting_file(const std::string& filename, Counter& freq_dict) {
+    std::ifstream input{filename};
+    if (!input.is_open()) {
+        std::cerr << "Failed to open file " << filename << '\n';
+        return;
+    }
+    Counter partial_counter;
+    count_words(input, partial_counter);
+    
+    std::lock_guard<std::mutex> lock(counter_mtx);
+    for (const auto& pair : partial_counter) {
+        freq_dict[pair.first] += pair.second;
+    }
+}
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -29,13 +47,14 @@ int main(int argc, char *argv[]) {
 
     auto start = std::chrono::high_resolution_clock::now();
     Counter freq_dict;
+    std::vector<std::thread> threads;
+
     for (int i = 1; i < argc; ++i) {
-        std::ifstream input{argv[i]};
-        if (!input.is_open()) {
-            std::cerr << "Failed to open file " << argv[i] << '\n';
-            return EXIT_FAILURE;
-        }
-        count_words(input, freq_dict);
+        threads.emplace_back(counting_file, argv[i], std::ref(freq_dict));
+    }
+
+    for (auto& thread : threads) {
+        thread.join();
     }
 
     print_topk(std::cout, freq_dict, TOPK);
@@ -50,7 +69,7 @@ std::string tolower(const std::string &str) {
                    std::back_inserter(lower_str),
                    [](unsigned char ch) { return std::tolower(ch); });
     return lower_str;
-};
+}
 
 void count_words(std::istream& stream, Counter& counter) {
     std::for_each(std::istream_iterator<std::string>(stream),
