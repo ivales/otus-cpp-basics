@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <atomic>
+#include <chrono>
 #include <iostream>
 #include <limits>
-#include <time.h>
 #include <thread>
 #include <vector>
 
@@ -74,8 +74,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  time_t start, end;
-  time(&start);
+  auto start_time = std::chrono::steady_clock::now();
 
   try {
     const std::vector<char> data = readFromFile(argv[1]);
@@ -98,11 +97,11 @@ int main(int argc, char **argv) {
 
     writeToFile(argv[2], badData);
 
-    time(&end);
+    auto end_time = std::chrono::steady_clock::now();
 
-    double seconds = difftime(end, start);
+    std::chrono::duration<double> elapsed_seconds = end_time - start_time;
 
-    std::cout << "Программа заверщилась за " << seconds << " секунд" << std::endl;
+    std::cout << "Программа заверщилась за " << elapsed_seconds.count() << " секунд" << std::endl;
 
   } catch (std::exception &ex) {
     std::cerr << ex.what() << '\n';
