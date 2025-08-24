@@ -40,7 +40,7 @@ void hack(const std::vector<char> &original,
     * В качестве доп. задания устраните избыточные вычисления
     */
 
-  auto resultCrc32 = crc32(result.data() + original.size(), injection.size(), originalCrc32);
+  auto resultCrc32 = crc32(result.data() + original.size(), injection.size(), ~originalCrc32);
 
   
   for (size_t i = start; i < end; ++i) {
@@ -48,7 +48,7 @@ void hack(const std::vector<char> &original,
     // Заменяем последние четыре байта на значение i
       replaceLastFourBytes(result, uint32_t(i));
     // Вычисляем CRC32 текущего вектора result
-      auto currentCrc32 = crc32(result.data() + original.size() + injection.size(), 4, resultCrc32);
+      auto currentCrc32 = crc32(result.data() + original.size() + injection.size(), 4, ~resultCrc32);
 
       if (currentCrc32 == originalCrc32) {
         std::cout << "Success\n";
