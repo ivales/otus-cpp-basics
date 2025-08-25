@@ -16,14 +16,13 @@ void replaceLastFourBytes(std::vector<char> &data, uint32_t value) {
 
 std::atomic<bool> isRunning(true);
 
-void multi_hack(size_t start, size_t end, const std::vector<char> &original, const std::string &injection,
-   std::vector<char> result, uint32_t &originalCrc32, uint32_t &resultCrc32, std::vector<char> &badData) {
+void multi_hack(size_t start, size_t end, std::vector<char> result, uint32_t originalCrc32, uint32_t resultCrc32, std::vector<char> &badData) {
     for (size_t i = start; i < end; ++i) {
     if (isRunning) {
     // Заменяем последние четыре байта на значение i
       replaceLastFourBytes(result, uint32_t(i));
     // Вычисляем CRC32 текущего вектора result
-      auto currentCrc32 = crc32(result.data() + original.size() + injection.size(), 4, ~resultCrc32);
+      auto currentCrc32 = crc32(result.data() + result.size(), 4, ~resultCrc32);
 
       if (currentCrc32 == originalCrc32) {
         std::cout << "Success\n";
@@ -71,8 +70,8 @@ void hack(const std::vector<char> &original,
     for (size_t i = 0; i < threadsNumber; ++i) {
         size_t start = i * chunk_size;
         size_t end = (i == threadsNumber - 1) ? maxVal : (i + 1) * chunk_size;
-        threads.emplace_back(multi_hack, start, end, std::cref(original), std::cref(injection), result,
-         std::ref(originalCrc32), std::ref(resultCrc32), std::ref(badData));
+        threads.emplace_back(multi_hack, start, end, result,
+         originalCrc32, resultCrc32, std::ref(badData));
     }
 
         for (auto& thread : threads) {
