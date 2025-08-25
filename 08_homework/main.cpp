@@ -16,7 +16,7 @@ void replaceLastFourBytes(std::vector<char> &data, uint32_t value) {
 
 std::atomic<bool> isRunning(true);
 
-void multi_hack(size_t start, size_t end, uint32_t originalCrc32, uint32_t resultCrc32) {
+void multi_hack(size_t start, size_t end, uint32_t originalCrc32, uint32_t resultCrc32, uint32_t &hack_bytes) {
     for (size_t i = start; i < end; ++i) {
     std::vector<char> hack_data(4);
     if (isRunning) {
@@ -27,6 +27,7 @@ void multi_hack(size_t start, size_t end, uint32_t originalCrc32, uint32_t resul
 
       if (currentCrc32 == originalCrc32) {
         std::cout << "Success\n";
+        hack_bytes = uint32_t(i);
         isRunning = false;
         return;
       }
@@ -53,6 +54,7 @@ void hack(const std::vector<char> &original,
   std::vector<char> result(original.size() + injection.size() + 4);
   auto it = std::copy(original.begin(), original.end(), result.begin());
   std::copy(injection.begin(), injection.end(), it);
+  uint32_t hack_bytes;
 
     /*
     * Внимание: код ниже крайне не оптимален.
@@ -61,21 +63,24 @@ void hack(const std::vector<char> &original,
 
   auto resultCrc32 = crc32(result.data() + original.size(), injection.size(), ~originalCrc32);
   
-      const size_t maxVal = std::numeric_limits<uint32_t>::max();
-    // size_t threadsNumber = std::thread::hardware_concurrency();
-    size_t threadsNumber = 4;
-    std::vector<std::thread> threads;
+  const size_t maxVal = std::numeric_limits<uint32_t>::max();
+  // size_t threadsNumber = std::thread::hardware_concurrency();
+  size_t threadsNumber = 4;
+  std::vector<std::thread> threads;
 
-    size_t chunk_size = maxVal / threadsNumber;
+  size_t chunk_size = maxVal / threadsNumber;
     for (size_t i = 0; i < threadsNumber; ++i) {
         size_t start = i * chunk_size;
         size_t end = (i == threadsNumber - 1) ? maxVal : (i + 1) * chunk_size;
-        threads.emplace_back(multi_hack, start, end, originalCrc32, resultCrc32);
+        threads.emplace_back(multi_hack, start, end, originalCrc32, resultCrc32, std::ref(hack_bytes));
     }
 
         for (auto& thread : threads) {
         thread.join();
     }
+    
+    replaceLastFourBytes(result, hack_bytes);
+    badData = result;
 }
 
 int main(int argc, char **argv) {
