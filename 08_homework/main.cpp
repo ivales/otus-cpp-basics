@@ -8,6 +8,7 @@
 
 #include "CRC32.hpp"
 #include "IO.hpp"
+#include <map>
 
 /// @brief Переписывает последние 4 байта значением value
 void replaceLastFourBytes(std::vector<char> &data, uint32_t value) {
@@ -48,7 +49,7 @@ void multi_hack(size_t start, size_t end, uint32_t originalCrc32, uint32_t resul
  * @return новый вектор
  */
 void hack(const std::vector<char> &original,
-                       const std::string &injection, std::vector<char> &badData) {
+                       const std::string &injection, std::vector<char> &badData, size_t threadsNumber) {
                         
   const uint32_t originalCrc32 = crc32(original.data(), original.size());
   std::vector<char> result(original.size() + injection.size() + 4);
@@ -65,7 +66,7 @@ void hack(const std::vector<char> &original,
   
   const size_t maxVal = std::numeric_limits<uint32_t>::max();
   // size_t threadsNumber = std::thread::hardware_concurrency();
-  size_t threadsNumber = 4;
+  // size_t threadsNumber = 4;
   std::vector<std::thread> threads;
 
   size_t chunk_size = maxVal / threadsNumber;
@@ -90,21 +91,42 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  auto start_time = std::chrono::steady_clock::now();
+  
 
   try {
     const std::vector<char> data = readFromFile(argv[1]);
     std::vector<char> badData;
-  
-    hack(data, "He-he-he", badData);
+    double meanTime;
+    std::map<std::string, double> timeThreadResults;
+    
+    for (size_t threadsNumber = 1; threadsNumber <= std::thread::hardware_concurrency()*2; threadsNumber*=2) {
+
+      meanTime = 0;
+
+      for (size_t i = 0; i < 5; i++) {
+
+        auto start_time = std::chrono::steady_clock::now();
+
+        hack(data, "He-he-he", badData, threadsNumber);
+
+        auto end_time = std::chrono::steady_clock::now();
+
+        std::chrono::duration<double> elapsed_seconds = end_time - start_time;
+
+        meanTime += elapsed_seconds.count();
+      }
+
+      timeThreadResults[std::to_string(threadsNumber) + " Threads"] = meanTime/5;
+
+    }
 
     writeToFile(argv[2], badData);
 
-    auto end_time = std::chrono::steady_clock::now();
+    // std::cout << "Программа заверщилась за " << elapsed_seconds.count() << " секунд" << std::endl;
 
-    std::chrono::duration<double> elapsed_seconds = end_time - start_time;
-
-    std::cout << "Программа заверщилась за " << elapsed_seconds.count() << " секунд" << std::endl;
+    for(auto& item : timeThreadResults) {
+      std::cout << item.first << " : " << item.second << " seconds" << std::endl; //Вывод ключей и значений
+    }
 
   } catch (std::exception &ex) {
     std::cerr << ex.what() << '\n';
