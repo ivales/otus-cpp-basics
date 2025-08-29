@@ -63,6 +63,8 @@ void hack(const std::vector<char> &original,
     */
 
   auto resultCrc32 = crc32(result.data() + original.size(), injection.size(), ~originalCrc32);
+
+  std::cout << "Program running in " << threadsNumber << " threads" << std::endl;
   
   const size_t maxVal = std::numeric_limits<uint32_t>::max();
   // size_t threadsNumber = std::thread::hardware_concurrency();
@@ -85,9 +87,9 @@ void hack(const std::vector<char> &original,
 }
 
 int main(int argc, char **argv) {
-  if (argc != 3) {
-    std::cerr << "Call with two args: " << argv[0]
-              << " <input file> <output file>\n";
+  if (argc < 3 or argc > 4) {
+    std::cerr << "Call with args: " << argv[0]
+              << " <input file> <output file> [number of threads]\n";
     return 1;
   }
 
@@ -96,38 +98,28 @@ int main(int argc, char **argv) {
   try {
     const std::vector<char> data = readFromFile(argv[1]);
     std::vector<char> badData;
-    double meanTime;
-    std::map<std::string, double> timeThreadResults;
-    
-    for (size_t threadsNumber = 1; threadsNumber <= std::thread::hardware_concurrency()*2; threadsNumber*=2) {
+    size_t threadsNumber = 4;
 
-      meanTime = 0;
+    auto start_time = std::chrono::steady_clock::now();
 
-      for (size_t i = 0; i < 5; i++) {
+    if (argc == 4) threadsNumber = static_cast<size_t>(atoi(argv[3]));
 
-        auto start_time = std::chrono::steady_clock::now();
-
-        hack(data, "He-he-he", badData, threadsNumber);
-
-        auto end_time = std::chrono::steady_clock::now();
-
-        std::chrono::duration<double> elapsed_seconds = end_time - start_time;
-
-        meanTime += elapsed_seconds.count();
-      }
-
-      timeThreadResults[std::to_string(threadsNumber) + " Threads"] = meanTime/5;
-
+    if (threadsNumber == 0) {
+      std::cout << "Error with convercion of threadsNumber argument to int. Program will be continued with default number of threads (4)" << std::endl;
+      threadsNumber = 4;
     }
 
+    hack(data, "He-he-he", badData, threadsNumber);
+
+    auto end_time = std::chrono::steady_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end_time - start_time;
+  
     writeToFile(argv[2], badData);
 
-    // std::cout << "Программа заверщилась за " << elapsed_seconds.count() << " секунд" << std::endl;
+    std::cout << "Program finished for " << elapsed_seconds.count() << " seconds" << std::endl;
 
-    for(auto& item : timeThreadResults) {
-      std::cout << item.first << " : " << item.second << " seconds" << std::endl; //Вывод ключей и значений
-    }
-
+  
   } catch (std::exception &ex) {
     std::cerr << ex.what() << '\n';
     return 2;
